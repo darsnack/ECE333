@@ -14,7 +14,7 @@ module ShiftRegister(DataIn, CLK, RESET, ShiftCLK, ShiftIn, Shift, Load, DataOut
 input [7:0] DataIn;
 input CLK, RESET, ShiftCLK, ShiftIn, Shift, Load;
 output [7:0] DataOut;
-output ShiftOut;
+output reg ShiftOut;
 
 reg [6:0] InternalBuffer;
 

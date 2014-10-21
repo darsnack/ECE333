@@ -14,7 +14,7 @@ module BaudRateGenerator(BaudRate, ClockFreq, CLK, EN, RESET, CLK_OUT);
 input [19:0] BaudRate;
 input [29:0] ClockFreq;
 input CLK, EN, RESET;
-output CLK_OUT;
+output reg CLK_OUT;
 
 reg [15:0] baud_count;
 

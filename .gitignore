@@ -60,3 +60,15 @@ xlnx_auto_0_xdb/
 xst/
 _ngo/
 _xmsgs/
+
+### iSim ###
+*_isim_beh.exe
+*_isim_beh.wdb
+fuse.log
+fuse.xmsgs
+fuseRelaunch.cmd
+isim.cmd
+isim.log
+isim/
+xilinxsim.ini
+

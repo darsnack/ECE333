@@ -21,7 +21,7 @@ reg [6:0] InternalBuffer;
 parameter INIT_VALUE = 8'b00000000;
 
 always @(posedge CLK) begin
-	if (RESET) InternalBuffer <= INIT_VALUE;
+	if (RESET) {ShiftOut, InternalBuffer} <= INIT_VALUE;
 	else if (Load) {ShiftOut, InternalBuffer} <= DataIn;
 	else {ShiftOut, InternalBuffer} <= {ShiftOut, InternalBuffer};
 end

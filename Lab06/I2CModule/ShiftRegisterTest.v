@@ -38,21 +38,20 @@ module ShiftRegisterTest;
 		.ShiftOut(ShiftOut)
 	);
 
+	initial begin CLK = 0; forever #5 CLK = ~CLK; end
+	initial begin ShiftCLK = 0; forever #10 ShiftCLK = ~ShiftCLK; end
+
 	initial fork
-		// Initialize Inputs
-		#0 CLK = 0;
-//		RESET = 1; #100;
-//		DataIn = 8'd0; CLK = 0; RESET = 0; ShiftCLK = 0; ShiftIn = 0; Shift = 0; Load = 0; #11;
-//		DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 1; #10;
-//		DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; #10;
-//		DataIn = 8'd4; ShiftIn = 1; Shift = 1; Load = 0; #40;
-//		DataIn = 8'd4; ShiftIn = 0; Shift = 1; Load = 0; #40;
-//		RESET = 1; #10;
-		#100 $stop;
+		#0 begin RESET = 1; end
+		#10 begin RESET = 0; end
+		#20 begin DataIn = 8'd4; ShiftIn = 1; Shift = 0; Load = 1; end
+		#30 begin DataIn = 8'd4; ShiftIn = 1; Shift = 1; Load = 0; end
+		#40 begin DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; end
+		#60 begin DataIn = 8'd4; ShiftIn = 0; Shift = 1; Load = 0; end
+		#80 begin DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; end
+		#100 begin RESET = 1; end
+		#110 $stop;
 	join
 
-assign #5 CLK = ~CLK;  
-//assign #10 ShiftCLK = ~ShiftCLK;    
-		
 endmodule
 

@@ -64,6 +64,7 @@ _xmsgs/
 ### iSim ###
 *_isim_beh.exe
 *_isim_beh.wdb
+*.wdb
 fuse.log
 fuse.xmsgs
 fuseRelaunch.cmd

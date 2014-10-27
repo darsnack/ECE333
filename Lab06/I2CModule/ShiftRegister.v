@@ -2,10 +2,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 // CM Box: 			 1608 & 1876
 // Engineer:		 Kyle Daruwalla & David McNeil
-// 
+//
 // Create Date:    10/21/2014
 // Module Name:    ShiftRegister
-// Description: 
+// Description:
 //
 // A shift register designed to handle serial data output for an I2C master module.
 //
@@ -23,11 +23,7 @@ parameter INIT_VALUE = 8'b00000000;
 always @(posedge CLK) begin
 	if (RESET) {ShiftOut, InternalBuffer} <= INIT_VALUE;
 	else if (Load) {ShiftOut, InternalBuffer} <= DataIn;
-	else {ShiftOut, InternalBuffer} <= {ShiftOut, InternalBuffer};
-end
-
-always @(posedge ShiftCLK) begin
-	if (Shift) {ShiftOut, InternalBuffer} <= {InternalBuffer[6:0], ShiftIn};
+	else if (~ShiftCLK && Shift) {ShiftOut, InternalBuffer} <= {InternalBuffer[6:0], ShiftIn};
 	else {ShiftOut, InternalBuffer} <= {ShiftOut, InternalBuffer};
 end
 

@@ -28,8 +28,8 @@ I2CController ControlUnit(.CLK(clock), .CLKI2C(SCL), .EN(Go), .RESET(RESET), .Ba
 						  .Select(Select), .ShiftOrHold(ShiftOrHold), .StartStopACK(StartStopACK), .ShiftLoad(ShiftLoad));
 
 wire [7:0] ReceivedData;
-MasterDataUnit DataUnit(.BaudRate(), .CLKFreq(), .CLK(clock), .BaudEN(BaudEnable), .RESET(RESET), .ACK(StartStopACK), 
-			   .Start(), .Stop(), .Read(ReadOrWrite), .Select(Select), .SendData(), .Shift(ShiftOrHold), 
+MasterDataUnit DataUnit(.BaudRate(baud_rate), .CLKFreq(frequency), .CLK(clock), .BaudEN(BaudEnable), .RESET(RESET), .ACK(StartStopACK), 
+			   .Start(), .Stop(), .Read(ReadOrWrite), .Select(Select), .SendData(first_byte), .Shift(ShiftOrHold), 
 			   .Load(ShiftLoad), .SCL(SCL), .SDA(SDA), .ReceivedData(ReceivedData));
 
 endmodule

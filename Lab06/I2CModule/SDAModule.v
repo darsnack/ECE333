@@ -12,24 +12,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 module SDAModule(Read, Select, ShiftOut, StartStopACK, ShiftIn, SDA);
 input Read, Select, ShiftOut, StartStopACK;
-output reg ShiftIn;
+output ShiftIn;
 inout SDA;
 
-parameter	HI_Z = 1'bZ;
+parameter	HI_Z = 1'b0;
 
-parameter	READ = 2'b1x,
-			START_STOP_ACK = 2'b00,
-			DATA = 2'b01;
-
-always @(Read or Select or ShiftOut or StartStopACK) begin
-	casex({Read, Select})
-	READ: ShiftIn <= HI_Z;
-	START_STOP_ACK: ShiftIn <= StartStopACK;
-	DATA: ShiftIn <= ShiftOut;
-	default: ShiftIn <= HI_Z;
-    endcase
-end
-
-assign SDA = ShiftIn;
+assign SDA = Read ? HI_Z : (Select ? ShiftOut : StartStopACK);
+assign ShiftIn = SDA;
 
 endmodule

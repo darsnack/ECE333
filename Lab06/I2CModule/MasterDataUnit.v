@@ -21,7 +21,7 @@ output SCL, SDA;
 wire ShiftIn, ShiftOut;
 
 BaudRateGenerator BaudRateUnit(.BaudRate(BaudRate), .ClockFreq(CLKFreq), .CLK(CLK), .EN(BaudEN), .RESET(RESET), .CLK_OUT(SCL));
-SDAModule SDAUnit(.Read(Read), .Select(Select), .ShiftOut(ShiftOut), .ShiftIn(ShiftIn), .SDA(SDA));
+SDAModule SDAUnit(.Read(Read), .Select(Select), .ShiftOut(ShiftOut), .ShiftIn(ShiftIn), .SDA(SDA), .StartStopACK(ACK));
 ShiftRegister ShiftRegisterUnit(.DataIn(SendData), .CLK(CLK), .RESET(RESET), .ShiftCLK(SCL), .ShiftIn(ShiftIn), .Shift(Shift), .Load(Load), .DataOut(ReceivedData), .ShiftOut(ShiftOut));
 
 endmodule

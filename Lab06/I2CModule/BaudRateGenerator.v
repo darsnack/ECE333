@@ -22,7 +22,7 @@ parameter INIT_BAUD_COUNT = 16'd0;
 
 always @(posedge CLK)
 	if(RESET) begin
-		baud_count <= 1'b0;
+		baud_count <= INIT_BAUD_COUNT;
 		CLK_OUT <= 1'b1;
 	end
 	else if (EN) begin

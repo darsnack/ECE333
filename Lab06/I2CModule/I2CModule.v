@@ -17,7 +17,7 @@ input Go, RESET, CLK;
 output SCL, locked;
 inout SDA;
 
-parameter first_byte=8'b10010011;
+parameter first_byte=8'b01010011;
 parameter baud_rate=20'd100000, frequency=30'd50000000;
 
 wire clock;
@@ -31,5 +31,7 @@ wire [7:0] ReceivedData;
 MasterDataUnit DataUnit(.BaudRate(baud_rate), .CLKFreq(frequency), .CLK(clock), .BaudEN(BaudEnable), .RESET(RESET), .ACK(StartStopACK), 
 			   .Start(), .Stop(), .Read(ReadOrWrite), .Select(Select), .SendData(first_byte), .Shift(ShiftOrHold), 
 			   .Load(ShiftLoad), .SCL(SCL), .SDA(SDA), .ReceivedData(ReceivedData));
+				
+
 
 endmodule

@@ -26,28 +26,28 @@ parameter initial_state = 3'd0, start_state = 3'd1, load_state = 3'd2, write_sta
 always@(current_state) begin
     case(current_state)
         initial_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
         end
         start_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         load_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 1;     
+            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 1;     
         end
         write_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 1; ShiftOrHold <= 1; StartStopACK <= 0; ShiftLoad <= 0; 
+            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 1; ShiftOrHold <= 1; StartStopACK <= 0; ShiftLoad <= 0; 
         end
         ack_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         transit_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         stop_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
         end
         default: begin
-            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
     endcase
 end
@@ -64,7 +64,7 @@ always@(posedge CLK) begin
     case(current_state)
 		initial_state: begin
 			clear_timer <= 1;
-			count <= 9;
+			count <= 0;
 		end
 		start_state: begin
 			clear_timer <= 0;
@@ -72,7 +72,8 @@ always@(posedge CLK) begin
 		end
 		load_state: begin
 			clear_timer <= 1;
-			count <= count;
+			if (count == 0 && I2C_oneshot) count <= 8;
+			else count <= count;
 		end
 		write_state: begin
 			clear_timer <= 1;
@@ -110,16 +111,15 @@ always@(CLKI2C or EN or RESET or timeout or count or current_state or I2C_onesho
             else next_state <= start_state; 
         end
         load_state: begin
-            if(count > 8) next_state <= write_state;
-            else next_state <= load_state; 
+            if(count == 0) next_state <= load_state;
+            else next_state <= write_state; 
         end
         write_state: begin
             if(count == 0) next_state <= ack_state;
             else next_state <= write_state; 
         end
         ack_state: begin
-            if(I2C_oneshot) next_state <= transit_state;
-            else next_state <= ack_state; 
+            next_state <= transit_state; 
         end
         transit_state: begin
             if(timeout) next_state <= stop_state;

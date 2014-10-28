@@ -24,6 +24,7 @@ module ShiftRegisterTest;
 	// Outputs
 	wire [7:0] DataOut;
 	wire ShiftOut;
+	wire CLKOneShot = uut.I2C_oneshot;
 
 	// Instantiate the Unit Under Test (UUT)
 	ShiftRegister uut (

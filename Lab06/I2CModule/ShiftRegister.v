@@ -14,23 +14,27 @@ module ShiftRegister(DataIn, CLK, RESET, ShiftCLK, ShiftIn, Shift, Load, DataOut
 input [7:0] DataIn;
 input CLK, RESET, ShiftCLK, ShiftIn, Shift, Load;
 output [7:0] DataOut;
-output reg ShiftOut;
+output ShiftOut;
 
-reg [6:0] InternalBuffer;
+reg [7:0] InternalBuffer;
+wire I2C_oneshot;
 
 parameter INIT_VALUE = 8'b00000000;
 
 always @(posedge CLK) begin
 	if (RESET) 
-		{ShiftOut, InternalBuffer} <= INIT_VALUE;
+		InternalBuffer <= DataIn;
 	else if (Load) 
-		{ShiftOut, InternalBuffer} <= DataIn;
-	else if (ShiftCLK && Shift) 
-		{ShiftOut, InternalBuffer} <= {InternalBuffer[6:0], ShiftIn};
+		InternalBuffer <= DataIn;
+	else if (I2C_oneshot && Shift) 
+		InternalBuffer <= {InternalBuffer[6:0], ShiftIn};
 	else 
-		{ShiftOut, InternalBuffer} <= {ShiftOut, InternalBuffer};
+		InternalBuffer <= InternalBuffer;
 end
 
-assign DataOut = {ShiftOut, InternalBuffer};
+assign DataOut = InternalBuffer;
+assign ShiftOut = InternalBuffer[7];
+
+ClockedOneShot OneShot(~ShiftCLK, I2C_oneshot, RESET, CLK);
 
 endmodule

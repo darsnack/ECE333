@@ -99,7 +99,7 @@ always@(posedge CLK) begin
 end
 
 // State transistion logic
-always@(CLKI2C or EN or RESET or timeout or count or current_state) begin
+always@(CLKI2C or EN or RESET or timeout or count or current_state or I2C_oneshot) begin
     case(current_state)
         initial_state: begin
             if(EN && CLKI2C) next_state <= start_state;
@@ -117,10 +117,8 @@ always@(CLKI2C or EN or RESET or timeout or count or current_state) begin
             if(count == 0) next_state <= ack_state;
             else next_state <= write_state; 
         end
-        // According to the ASM chart CLKI2c must be passed through a one shot
-        // i do not know if this is the case. I think this might work?
         ack_state: begin
-            if(CLKI2C) next_state <= transit_state;
+            if(I2C_oneshot) next_state <= transit_state;
             else next_state <= ack_state; 
         end
         transit_state: begin

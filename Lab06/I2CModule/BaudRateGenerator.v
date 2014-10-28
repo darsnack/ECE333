@@ -21,18 +21,18 @@ reg [15:0] baud_count;
 parameter INIT_BAUD_COUNT = 16'd0;
 
 always @(posedge CLK)
-	if (EN) begin
-		if(RESET) begin
-			baud_count <= 1'b0;
-			CLK_OUT <= 1'b1;
-		end
-		else if (baud_count == ClockFreq/(BaudRate*16)) begin
+	if(RESET) begin
+		baud_count <= 1'b0;
+		CLK_OUT <= 1'b1;
+	end
+	else if (EN) begin
+		if (baud_count == ClockFreq/(BaudRate*2)) begin
 				baud_count <= 1'b0;
-				CLK_OUT <= 1'b1;
+				CLK_OUT <= ~CLK_OUT;
 		end
 		else begin
 			baud_count <= baud_count + 1'b1;
-			CLK_OUT <= 1'b0;
+			CLK_OUT <= CLK_OUT;
 		end
 	end
 	else begin

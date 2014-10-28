@@ -13,12 +13,12 @@
 module I2CController(CLK, CLKI2C, EN, RESET, BaudEnable, ReadOrWrite, Select, ShiftOrHold, StartStopACK, ShiftLoad);
 input CLK, CLKI2C, EN, RESET;
 output reg BaudEnable, ReadOrWrite, Select, ShiftOrHold, StartStopACK, ShiftLoad;
-wire timeout;
+wire timeout, I2C_oneshot;
 reg clear_timer;
 
 // State variables
 reg [2:0] current_state, next_state;
-reg [3:0] count, next_count;
+reg [3:0] count;
 //State Codes
 parameter initial_state = 3'd0, start_state = 3'd1, load_state = 3'd2, write_state = 3'd3, ack_state = 3'd4, transit_state = 3'd5, stop_state = 3'd6;
 
@@ -26,28 +26,28 @@ parameter initial_state = 3'd0, start_state = 3'd1, load_state = 3'd2, write_sta
 always@(current_state) begin
     case(current_state)
         initial_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
         end
         start_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         load_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 1;     
+            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 1;     
         end
         write_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 1; ShiftOrHold <= 1; StartStopACK <= 0; ShiftLoad <= 0; 
+            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 1; ShiftOrHold <= 1; StartStopACK <= 0; ShiftLoad <= 0; 
         end
         ack_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         transit_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         stop_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
         end
         default: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
     endcase
 end
@@ -60,36 +60,46 @@ always@(posedge CLK) begin
     else begin
         current_state <= next_state;
     end
-    // Configure timer based on current state
+    // Configure timer and count based on current state
     case(current_state)
-        initial_state: clear_timer <= 1;
-        start_state: clear_timer <= 0;
-        load_state: clear_timer <= 1;
-        write_state: clear_timer <= 1;
-        ack_state: clear_timer <= 1;
-        transit_state: clear_timer <= 0;
-        stop_state: clear_timer <= 0;
-        default: clear_timer <= 1;
-    endcase
-end
-
-// Update what bit we are transmiting denoted by count
-always@(posedge CLKI2C) begin
-    case(current_state)
-        initial_state: next_count <= 9;
-        start_state: next_count <= next_count;
-        load_state: next_count <= next_count;
-        write_state: next_count <= count - 1'b1; 
-        ack_state: next_count <= next_count; 
-        transit_state: next_count <= next_count;
-        stop_state: next_count <= next_count;
-        default: next_count <= next_count; 
+		initial_state: begin
+			clear_timer <= 1;
+			count <= 9;
+		end
+		start_state: begin
+			clear_timer <= 0;
+			count <= count;
+		end
+		load_state: begin
+			clear_timer <= 1;
+			count <= count;
+		end
+		write_state: begin
+			clear_timer <= 1;
+			if(I2C_oneshot) count <= count - 1'b1; 
+			else count <= count;
+		end
+		ack_state: begin
+			clear_timer <= 1;
+			count <= count;
+		end
+		transit_state: begin
+			clear_timer <= 0;
+			count <= count;
+		end
+		stop_state: begin
+			clear_timer <= 0;
+			count <= count;
+		end
+		default: begin
+			clear_timer <= 1;
+			count <= count;
+		end
     endcase
 end
 
 // State transistion logic
-always@(CLKI2C or EN or RESET or timeout or next_count or count or current_state) begin
-    count <= next_count;
+always@(CLKI2C or EN or RESET or timeout or count or current_state) begin
     case(current_state)
         initial_state: begin
             if(EN && CLKI2C) next_state <= start_state;
@@ -128,5 +138,6 @@ always@(CLKI2C or EN or RESET or timeout or next_count or count or current_state
 end
 
 DelayLoop Timer(clear_timer, timeout, CLK);
+ClockedOneShot OneShot(CLKI2C, I2C_oneshot, RESET, CLK) ;
 
 endmodule

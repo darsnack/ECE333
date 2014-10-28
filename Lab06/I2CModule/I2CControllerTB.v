@@ -29,6 +29,7 @@ module I2CControllerTB;
 	//wire [2:0] next_state = uut.next_state;
 	wire [3:0] count = uut.count;
 	//wire [3:0] next_count = uut.next_count;
+	wire timeout = uut.timeout;
 
 	// Instantiate the Unit Under Test (UUT)
 	I2CController uut (

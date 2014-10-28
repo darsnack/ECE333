@@ -38,20 +38,39 @@ module ShiftRegisterTest;
 		.ShiftOut(ShiftOut)
 	);
 
-	initial begin CLK = 0; forever #5 CLK = ~CLK; end
-	initial begin ShiftCLK = 0; forever #10 ShiftCLK = ~ShiftCLK; end
+//	initial begin CLK = 0; forever #5 CLK = ~CLK; end
+//	initial begin ShiftCLK = 0; forever #10 ShiftCLK = ~ShiftCLK; end
+//
+//	initial fork
+//		#0 begin RESET = 1; end
+//		#10 begin RESET = 0; end
+//		#20 begin DataIn = 8'd4; ShiftIn = 1; Shift = 0; Load = 1; end
+//		#30 begin DataIn = 8'd4; ShiftIn = 1; Shift = 1; Load = 0; end
+//		#40 begin DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; end
+//		#60 begin DataIn = 8'd4; ShiftIn = 0; Shift = 1; Load = 0; end
+//		#80 begin DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; end
+//		#100 begin RESET = 1; end
+//		#110 $stop;
+//	join
 
+	initial begin
+		Load = 0;  DataIn = 0;  ShiftIn = 0;   Shift = 0;   ShiftCLK = 0;  RESET = 0;  CLK = 0;
+	end
+	always #4 CLK=~CLK;
+	
 	initial fork
-		#0 begin RESET = 1; end
-		#10 begin RESET = 0; end
-		#20 begin DataIn = 8'd4; ShiftIn = 1; Shift = 0; Load = 1; end
-		#30 begin DataIn = 8'd4; ShiftIn = 1; Shift = 1; Load = 0; end
-		#40 begin DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; end
-		#60 begin DataIn = 8'd4; ShiftIn = 0; Shift = 1; Load = 0; end
-		#80 begin DataIn = 8'd4; ShiftIn = 0; Shift = 0; Load = 0; end
-		#100 begin RESET = 1; end
-		#110 $stop;
+		#0 RESET = 0;  #6 RESET = 1;  #14 RESET = 0;  
+		#0 Load = 0;  #18 Load = 1; #25 Load = 0; #66 Load = 1;  #76 Load = 0; 
+		#0 DataIn = 8'b10101011;    	#56 DataIn = 8'b00110101;  
+		#0 ShiftIn = 1;   #13 ShiftIn = 1;   #19 ShiftIn = 0;   #24 ShiftIn = 1;   #38 ShiftIn = 0;    #46 ShiftIn = 1;
+		#67 ShiftIn = 0; #98 ShiftIn = 1;
+		#0 Shift = 0;   #32 Shift = 1;    #56 Shift = 0;  #67 Shift = 1;  
+		#0 ShiftCLK = 0; #45 ShiftCLK = 1; #55 ShiftCLK = 0; #65 ShiftCLK = 1; #75 ShiftCLK = 0; #85 ShiftCLK = 1;
+		#95 ShiftCLK = 0; #105 ShiftCLK = 1; #115 ShiftCLK = 0; #125 ShiftCLK = 1; #135 ShiftCLK = 0; #145 ShiftCLK = 1; 
+		#160 $stop;
 	join
+
+
 
 endmodule
 

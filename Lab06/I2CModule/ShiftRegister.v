@@ -21,10 +21,14 @@ reg [6:0] InternalBuffer;
 parameter INIT_VALUE = 8'b00000000;
 
 always @(posedge CLK) begin
-	if (RESET) {ShiftOut, InternalBuffer} <= INIT_VALUE;
-	else if (Load) {ShiftOut, InternalBuffer} <= DataIn;
-	else if (~ShiftCLK && Shift) {ShiftOut, InternalBuffer} <= {InternalBuffer[6:0], ShiftIn};
-	else {ShiftOut, InternalBuffer} <= {ShiftOut, InternalBuffer};
+	if (RESET) 
+		{ShiftOut, InternalBuffer} <= INIT_VALUE;
+	else if (Load) 
+		{ShiftOut, InternalBuffer} <= DataIn;
+	else if (ShiftCLK && Shift) 
+		{ShiftOut, InternalBuffer} <= {InternalBuffer[6:0], ShiftIn};
+	else 
+		{ShiftOut, InternalBuffer} <= {ShiftOut, InternalBuffer};
 end
 
 assign DataOut = {ShiftOut, InternalBuffer};

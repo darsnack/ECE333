@@ -4,10 +4,10 @@
 // Engineer:		 Kyle Daruwalla & David McNeil
 //
 // Create Date:    10/27/2014
-// Module Name:    SDAModule
+// Module Name:    MasterDataUnit
 // Description:
 //
-// A I2C SDA module designed to generate start, stop, data, and ACK bits.
+// A I2C MasterDataUnit.
 //
 //////////////////////////////////////////////////////////////////////////////////
 module MasterDataUnit(BaudRate, CLKFreq, CLK, BaudEN, RESET, ACK, Start, Stop, Read, Select, SendData, Shift, Load, SCL, SDA, ReceivedData);

@@ -23,14 +23,15 @@ BaudRateGenerator BaudRateUnit(.BaudRate(BaudRate), .ClockFreq(ClockFreq), .CLK(
 parameter	LOW = 1'b0,
 			HIGH = 1'b1;
 
-parameter PERIOD = 20; // 20ns
+parameter PERIOD = 2; // 2ns
 
-initial begin CLK = 0; forever #(PERIOD / 2) CLK = ~CLK; end
+initial begin CLK = 0; 
+forever #(PERIOD / 2) CLK = ~CLK; end
 
 initial fork
 	#0 BaudRate = 1;
 
-	#0 ClockFreq = 50; // 50MHz
+	#0 ClockFreq = 5; // 5MHz
 
 	#0 EN = LOW;
 	#11 EN = HIGH;
@@ -41,7 +42,7 @@ initial fork
 	#51 RESET = HIGH;
 	#61 RESET = LOW;
 
-	#200 $stop;
+	#100 $stop;
 join
 
 endmodule

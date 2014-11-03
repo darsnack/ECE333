@@ -11,27 +11,28 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module I2CModule(CLK, Go, RESET, locked, SCL, SDA);
+module I2CModule(CLK, Go, RESET, locked, SCL, SDA, Data);
 
 input Go, RESET, CLK;
+input [7:0] Data;
 output SCL, locked;
 inout SDA;
 
-parameter first_byte=8'b01010011;
+parameter first_byte=8'b11111111;
 parameter baud_rate=20'd100000, frequency=30'd50000000;
 
-wire clock;
+wire clock, Go_oneshot;
 Clock50MHz SystemClock(CLK, clock, locked);
 
 wire ShiftLoad, ReadOrWrite, ShiftOrHold, Select, BaudEnable, StartStopACK;
-I2CController ControlUnit(.CLK(clock), .CLKI2C(SCL), .EN(Go), .RESET(RESET), .BaudEnable(BaudEnable), .ReadOrWrite(ReadOrWrite), 
+I2CController ControlUnit(.CLK(clock), .CLKI2C(SCL), .EN(Go_oneshot), .RESET(RESET), .BaudEnable(BaudEnable), .ReadOrWrite(ReadOrWrite), 
 						  .Select(Select), .ShiftOrHold(ShiftOrHold), .StartStopACK(StartStopACK), .ShiftLoad(ShiftLoad));
 
 wire [7:0] ReceivedData;
 MasterDataUnit DataUnit(.BaudRate(baud_rate), .CLKFreq(frequency), .CLK(clock), .BaudEN(BaudEnable), .RESET(RESET), .ACK(StartStopACK), 
-			   .Start(), .Stop(), .Read(ReadOrWrite), .Select(Select), .SendData(first_byte), .Shift(ShiftOrHold), 
+			   .Start(), .Stop(), .Read(ReadOrWrite), .Select(Select), .SendData(Data), .Shift(ShiftOrHold), 
 			   .Load(ShiftLoad), .SCL(SCL), .SDA(SDA), .ReceivedData(ReceivedData));
 				
-
+ClockedOneShot OneShot(Go, Go_oneshot, RESET, clock);
 
 endmodule

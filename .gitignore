@@ -65,6 +65,7 @@ _xmsgs/
 *_isim_beh.exe
 *_isim_beh.wdb
 *.wdb
+*.fuse*
 fuse.log
 fuse.xmsgs
 fuseRelaunch.cmd
@@ -72,4 +73,11 @@ isim.cmd
 isim.log
 isim/
 xilinxsim.ini
-
+*.spl
+*.sym
+*.tmp
+*.xsl
+*.xwbt
+*.tcl
+*_impact.xml
+*.log

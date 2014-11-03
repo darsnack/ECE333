@@ -15,7 +15,7 @@ input Read, Select, ShiftOut, StartStopACK;
 output ShiftIn;
 inout SDA;
 
-parameter	HI_Z = 1'b0;
+parameter	HI_Z = 1'bZ;
 
 assign SDA = Read ? HI_Z : (Select ? ShiftOut : StartStopACK);
 assign ShiftIn = SDA;

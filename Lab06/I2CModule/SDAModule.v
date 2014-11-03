@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 module SDAModule(Read, Select, ShiftOut, StartStopACK, ShiftIn, SDA);
 input Read, Select, ShiftOut, StartStopACK;
-output ShiftIn;
+inout ShiftIn;
 inout SDA;
 
 parameter	HI_Z = 1'bZ;

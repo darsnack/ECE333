@@ -10,11 +10,11 @@
 // A I2C MasterDataUnit.
 //
 //////////////////////////////////////////////////////////////////////////////////
-module MasterDataUnit(BaudRate, CLKFreq, CLK, BaudEN, RESET, ACK, Start, Stop, Read, Select, SendData, Shift, Load, SCL, SDA, ReceivedData);
+module MasterDataUnit(BaudRate, CLKFreq, CLK, BaudEN, RESET, ACK, Read, Select, SendData, Shift, Load, SCL, SDA, ReceivedData);
 input [19:0] BaudRate;
 input [29:0] CLKFreq;
 input [7:0] SendData;
-input CLK, BaudEN, RESET, ACK, Start, Stop, Read, Select, Shift, Load;
+input CLK, BaudEN, RESET, ACK, Read, Select, Shift, Load;
 output [7:0] ReceivedData;
 output SCL, SDA;
 

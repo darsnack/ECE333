@@ -28,8 +28,8 @@ wire clock, Go_oneshot;
 Clock50MHz SystemClock(CLK, clock, locked);
 
 wire ShiftLoad, ReadOrWrite, ShiftOrHold, Select, BaudEnable, StartStopACK;
-I2CController ControlUnit(.CLK(clock), .CLKI2C(SCL), .EN(Go_oneshot), .RESET(RESET), .BaudEnable(BaudEnable), .ReadOrWrite(ReadOrWrite), 
-						  .Select(Select), .ShiftOrHold(ShiftOrHold), .StartStopACK(StartStopACK), .ShiftLoad(ShiftLoad));
+I2CController ControlUnit(.CLK(clock), .CLKI2C(SCL), .EN(Go_oneshot), .RESET(RESET), .BaudEnable(BaudEnable), .Read(ReadOrWrite), 
+						  .Select(Select), .Shift(ShiftOrHold), .StartStopACK(StartStopACK), .ShiftLoad(ShiftLoad));
 
 wire [7:0] ReceivedData;
 MasterDataUnit DataUnit(.BaudRate(baud_rate), .CLKFreq(frequency), .CLK(clock), .BaudEN(BaudEnable), .RESET(RESET), .ACK(StartStopACK), 

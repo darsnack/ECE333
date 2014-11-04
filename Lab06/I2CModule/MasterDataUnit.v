@@ -10,18 +10,18 @@
 // A I2C MasterDataUnit.
 //
 //////////////////////////////////////////////////////////////////////////////////
-module MasterDataUnit(BaudRate, CLKFreq, CLK, BaudEN, RESET, ACK, Read, Select, SendData, Shift, Load, SCL, SDA, ReceivedData);
+module MasterDataUnit(BaudRate, CLKFreq, CLK, BaudEN, RESET, StartStopACK, Read, Select, SendData, Shift, Load, SCL, SDA, ReceivedData);
 input [19:0] BaudRate;
 input [29:0] CLKFreq;
 input [7:0] SendData;
-input CLK, BaudEN, RESET, ACK, Read, Select, Shift, Load;
+input CLK, BaudEN, RESET, StartStopACK, Read, Select, Shift, Load;
 output [7:0] ReceivedData;
 output SCL, SDA;
 
 wire ShiftIn, ShiftOut;
 
 BaudRateGenerator BaudRateUnit(.BaudRate(BaudRate), .ClockFreq(CLKFreq), .CLK(CLK), .EN(BaudEN), .RESET(RESET), .CLK_OUT(SCL));
-SDAModule SDAUnit(.Read(Read), .Select(Select), .ShiftOut(ShiftOut), .ShiftIn(ShiftIn), .SDA(SDA), .StartStopACK(ACK));
+SDAModule SDAUnit(.Read(Read), .Select(Select), .ShiftOut(ShiftOut), .ShiftIn(ShiftIn), .SDA(SDA), .StartStopACK(StartStopACK));
 ShiftRegister ShiftRegisterUnit(.DataIn(SendData), .CLK(CLK), .RESET(RESET), .ShiftCLK(SCL), .ShiftIn(ShiftIn), .Shift(Shift), .Load(Load), .DataOut(ReceivedData), .ShiftOut(ShiftOut));
 
 endmodule

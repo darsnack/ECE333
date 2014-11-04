@@ -7,14 +7,7 @@ NET "SDA" LOC = P11;
 NET "RESET" LOC = C9;
 //NET "locked" LOC = U16;
 NET "CLK" LOC = V10;
-NET "Data[7]" LOC = T5;
-NET "Data[6]" LOC = V8;
-NET "Data[5]" LOC = U8;
-NET "Data[4]" LOC = N8;
-NET "Data[3]" LOC = M8;
-NET "Data[2]" LOC = V9;
-NET "Data[1]" LOC = T9;
-NET "Data[0]" LOC = T10;
+NET "Mode" LOC = T10;
 //7-Seg Display
 NET "Display[0]" LOC = T17; //CA
 NET "Display[1]" LOC = T18; //CB

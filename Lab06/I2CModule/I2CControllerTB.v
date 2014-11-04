@@ -25,7 +25,7 @@ module I2CControllerTB;
 	wire ShiftOrHold;
 	wire StartStopACK;
 	wire ShiftLoad;
-	wire [2:0] current_state = uut.current_state;
+	wire [3:0] current_state = uut.current_state;
 	//wire [2:0] next_state = uut.next_state;
 	wire [3:0] count = uut.count;
 	//wire [3:0] next_count = uut.next_count;
@@ -39,9 +39,9 @@ module I2CControllerTB;
 		.EN(EN), 
 		.RESET(RESET), 
 		.BaudEnable(BaudEnable), 
-		.ReadOrWrite(ReadOrWrite), 
+		.Read(ReadOrWrite), 
 		.Select(Select), 
-		.ShiftOrHold(ShiftOrHold), 
+		.Shift(ShiftOrHold), 
 		.StartStopACK(StartStopACK), 
 		.ShiftLoad(ShiftLoad)
 	);
@@ -55,7 +55,7 @@ module I2CControllerTB;
 		#12 EN = 1;  
 		#0 RESET = 1;  
 		#6 RESET = 0; 
-		#375 $stop;
+		#1000 $stop;
 	join
       
 endmodule

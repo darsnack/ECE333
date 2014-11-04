@@ -45,7 +45,7 @@ always@(current_state) begin
             BaudEnable <= 1; Read <= 1; Select <= 1; Shift <= 1; StartStopACK <= 0; ShiftLoad <= 0;
         end
         ack_write_state: begin
-            BaudEnable <= 1; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 1; Read <= 0; Select <= 0; Shift <= 1; StartStopACK <= 0; ShiftLoad <= 0;
         end
         transit_state: begin
             BaudEnable <= 0; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
@@ -89,7 +89,7 @@ always@(posedge CLK) begin
 		end
 		ack_read_state: begin
 			clear_timer <= 1;
-			count <= 4'd8;
+			count <= 4'd9;
 		end
         read_state: begin
             clear_timer <= 1;

@@ -10,9 +10,9 @@
 // A controller for the I2C module
 //
 //////////////////////////////////////////////////////////////////////////////////
-module I2CController(CLK, CLKI2C, EN, RESET, BaudEnable, ReadOrWrite, Select, ShiftOrHold, StartStopACK, ShiftLoad);
+module I2CController(CLK, CLKI2C, EN, RESET, BaudEnable, Read, Select, Shift, StartStopACK, ShiftLoad);
 input CLK, CLKI2C, EN, RESET;
-output reg BaudEnable, ReadOrWrite, Select, ShiftOrHold, StartStopACK, ShiftLoad;
+output reg BaudEnable, Read, Select, Shift, StartStopACK, ShiftLoad;
 wire timeout, I2C_oneshot;
 reg clear_timer;
 
@@ -27,34 +27,34 @@ parameter initial_state = 4'd0, start_state = 4'd1, load_state = 4'd2, write_sta
 always@(current_state) begin
     case(current_state)
         initial_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
+            BaudEnable <= 0; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 1; ShiftLoad <= 0;
         end
         start_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         load_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 1;     
+            BaudEnable <= 1; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 1;     
         end
         write_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 1; ShiftOrHold <= 1; StartStopACK <= 0; ShiftLoad <= 0; 
+            BaudEnable <= 1; Read <= 0; Select <= 1; Shift <= 1; StartStopACK <= 0; ShiftLoad <= 0; 
         end
         ack_read_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 1; Read <= 1; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         read_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 1; Select <= 1; ShiftOrHold <= 1; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 1; Read <= 1; Select <= 1; Shift <= 1; StartStopACK <= 0; ShiftLoad <= 0;
         end
         ack_write_state: begin
-            BaudEnable <= 1; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 1; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         transit_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
         stop_state: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 1; ShiftLoad <= 0;
+            BaudEnable <= 0; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 1; ShiftLoad <= 0;
         end
         default: begin
-            BaudEnable <= 0; ReadOrWrite <= 0; Select <= 0; ShiftOrHold <= 0; StartStopACK <= 0; ShiftLoad <= 0;
+            BaudEnable <= 0; Read <= 0; Select <= 0; Shift <= 0; StartStopACK <= 0; ShiftLoad <= 0;
         end
     endcase
 end

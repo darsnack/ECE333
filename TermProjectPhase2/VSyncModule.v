@@ -1,0 +1,40 @@
+`timescale 1ns / 1ps
+//File: VSyncModule.v
+//Author: 
+//Date: 
+//The line increment is synchronized with the hsync pulse
+//synch pulse is generated at the end of the line: Active Video-BackPorch-SynchPulse-FrontPorch
+//this is how it is done by the video timer of the pong game
+//LineEnd and FrameEnd are ANDed to restart frame
+
+module VSyncModule(RESET, CLK, LineEnd, SynchPulse, FrontPorch, ActiveVideo, BackPorch, vsync, yposition);
+parameter yresolution = 10;
+input [(yresolution - 1):0] SynchPulse, FrontPorch, ActiveVideo, BackPorch;
+input RESET, CLK, LineEnd;
+output vsync;
+output [(yresolution - 1):0] yposition;
+wire [(yresolution - 1):0] ycount;
+wire [(xresolution - 1):0] EndCount = SynchPulse + FrontPorch + ActiveVideo + BackPorch;
+
+ClockedOneShot RestartUnit(LineEnd, NextLineOneShot, RESET, CLK);
+
+assign vsync = ~(ycount >= (ActiveVideo + FrontPorch) && (ActiveVideo + FrontPorch + SynchPulse));
+assign LineEnd = (ycount == EndCount);
+
+always @(ycount, SynchPulse, BackPorch, ActiveVideo, FrontPorch) begin
+	yposition <= ycount;
+end
+
+UniversalCounter10bitsV5 XPositionCounter(
+	.P(10'd0), 
+	.BeginCount(10'd0), 
+	.EndCount(EndCount), 
+	.Q(ycount), 
+	.S1(LineEnd || RestartOneShot), 
+	.S0(LineEnd || RestartOneShot || PixelClockOneShot),
+	.TerminalCount(),
+	.RESET(RESET), 
+	.CLK(CLK)
+);
+
+endmodule

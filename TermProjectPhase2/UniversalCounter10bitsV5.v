@@ -3,16 +3,16 @@
 // 4-bit universal bidirectional counter
 `timescale 1ns / 1ps
 
-module UniversalCounter10bitsV5(P,BeginCount, EndCount, Q,S1,S0,TerminalCount, Reset, CLOCK) ;
+module UniversalCounter10bitsV5(P,BeginCount, EndCount, Q,S1,S0,TerminalCount, RESET, CLK) ;
 parameter	length = 10;
-input		S1, S0, Reset, CLOCK;
+input		S1, S0, RESET, CLK;
 input	[length-1:0]	P, BeginCount, EndCount;
 output 	reg [length-1:0]	Q;
 output reg TerminalCount;	//TerminalCount=1 when the counter wraps around
 reg	[length-1:0]	NextQ;
 
-always @ (posedge CLOCK or posedge Reset)
-	if(Reset==1)	Q <= BeginCount;
+always @ (posedge CLK or posedge RESET)
+	if(RESET==1)	Q <= BeginCount;
 	else	Q<=NextQ;
 
 always@(Q or S1 or S0 or P or EndCount or BeginCount)

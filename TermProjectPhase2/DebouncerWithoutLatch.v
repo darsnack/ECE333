@@ -1,10 +1,18 @@
-// File name	: DebouncerWithoutLatch.v
-// Written by	: Jianjian Song
-// debouncing an input switch
-//if (Switch==1) delay a bit and test again. if (switch==1) output is 1
-//else output is 0
-//visa verse
 `timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// CM Box: 			 1608 & 1876
+// Engineer:		 Kyle Daruwalla & David McNeil
+//
+// Create Date:    11/10/2014
+// Module Name:    DebouncerWithoutLatch
+// Description:
+//
+// debouncing an input switch
+// if (Switch==1) delay a bit and test again. if (switch==1) output is 1
+// else output is 0
+// visa verse
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 module DebouncerWithoutLatch(InputPulse, DebouncedOuput, Reset, CLOCK) ;
 

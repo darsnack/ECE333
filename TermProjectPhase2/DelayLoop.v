@@ -1,8 +1,15 @@
 `timescale 1ns / 1ps
-// File name	: DelayLoop.v
-// Written by	: Jianjian Song
-// Divide a high frequency square wave to 
-// generate a lower frequency square wave.
+//////////////////////////////////////////////////////////////////////////////////
+// CM Box: 			 1608 & 1876
+// Engineer:		 Kyle Daruwalla & David McNeil
+//
+// Create Date:    11/10/2014
+// Module Name:    DelayLoop
+// Description:
+//
+// Divide a high frequency square wave to generate a lower frequency square wave.
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 module DelayLoop(MR,Timeout,Clock) ;
 parameter	Divider = 10000;	//delay time in number of clock cycles

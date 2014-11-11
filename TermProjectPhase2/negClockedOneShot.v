@@ -1,8 +1,15 @@
-// File name	: negClockedOneShot.v
-// Written by	: Jianjian Song
-// Input puls is a negtive pulse
-// generate a positive pulse
 `timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// CM Box: 			 1608 & 1876
+// Engineer:		 Kyle Daruwalla & David McNeil
+//
+// Create Date:    11/10/2014
+// Module Name:    negClockedOneShot
+// Description:
+//
+// Negative clocked one shot
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 module negClockedOneShot(InputPulse, OneShot, Reset, CLOCK) ;
 

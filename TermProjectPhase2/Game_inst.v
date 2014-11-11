@@ -1,10 +1,16 @@
 `timescale 1ns / 1ps
-//Source: http://www.bigmessowires.com/2009/06/21/fpga-pong/
+//////////////////////////////////////////////////////////////////////////////////
+// CM Box: 			 1608 & 1876
+// Engineer:		 Kyle Daruwalla & David McNeil
 //
-// -----------------------------------------------
-// updates the ball and paddle positions, and
-// determines the output video image
-// -----------------------------------------------
+// Create Date:    11/10/2014
+// Module Name:    game
+// Description:
+//
+// updates the ball and paddle positions, and determines the output video image
+//
+//////////////////////////////////////////////////////////////////////////////////
+
 module game(input clk25, input Reset,
 				input [9:0] xpos,
 				input [9:0] ypos,

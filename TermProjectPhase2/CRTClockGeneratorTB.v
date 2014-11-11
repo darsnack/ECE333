@@ -1,22 +1,42 @@
 `timescale 1ns / 1ps
-
+//////////////////////////////////////////////////////////////////////////////////
+// CM Box: 			 1608 & 1876
+// Engineer:		 Kyle Daruwalla & David McNeil
 //
+// Create Date:    11/10/2014
+// Module Name:    CRTClockGeneratorTB
+// Description:
+//
+// Test bench for generating the internal game clock at 25MHz from a system clock
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 module CRTClockGeneratorTB;
 
-	reg [30:0] SystemClock;
-	reg Reset, Clock;
+	// Inputs
+	reg CLK;
+	reg RESET;
+	reg [9:0] SystemClock;
 
+	// Outputs
 	wire CRTclock;
+	wire [15:0] count = uut.count;
+	wire [15:0] crt_clock_threshold = ((uut.SystemClock / uut.PixelClock) / 2) - 1;
 
-	CRTClockGenerator uut (SystemClock, CRTclock, Reset, Clock);
+	// Instantiate the Unit Under Test (UUT)
+	CRTClockGenerator uut (
+		.CLK(CLK), 
+		.RESET(RESET), 
+		.SystemClock(SystemClock), 
+		.CRTclock(CRTclock)
+	);
 
-	initial begin SystemClock = 100; Reset = 0; Clock = 0; end
+	initial begin SystemClock = 100; RESET = 0; CLK = 0; end
  
 	initial fork
-	#0 Reset=1; #20 Reset=0;
-	#800 $stop;
+		#0 RESET=1; #20 RESET=0;
+		#800 $stop;
 	join
-	always #4 Clock=~Clock;   
+		
+	always #5 CLK=~CLK;      
 endmodule
-

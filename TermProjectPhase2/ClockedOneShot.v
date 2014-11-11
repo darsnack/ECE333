@@ -1,7 +1,15 @@
-// File name	: UniversalCounter.v
-// Written by	: Jianjian Song
-// 4-bit universal bidirectional counter
 `timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// CM Box: 			 1608 & 1876
+// Engineer:		 Kyle Daruwalla & David McNeil
+//
+// Create Date:    11/10/2014
+// Module Name:    CRTClockGenerator
+// Description:
+//
+// 4-bit universal bidirectional counter
+//
+//////////////////////////////////////////////////////////////////////////////////
 
 module ClockedOneShot(InputPulse, OneShot, Reset, CLOCK) ;
 

@@ -17,7 +17,7 @@ module PongWithCRTdriver(
     output [2:0] green,
     output [1:0] blue,
     output hsync, vsync,
-	output locked
+	 output locked
 );
 
 wire [9:0] xpos;
@@ -27,10 +27,6 @@ wire generated_clock;
 parameter [9:0] NumberofPixels=10'd640, NumberofLines=10'd480, SystemClockFreq=10'd100; //MHz 
 
 Clock100MHz SystemClockUnit(.CLK_IN1(CLK), .CLK_OUT1(generated_clock), .LOCKED(locked)); 
-
-//module CRTcontrollerVer5(Xresolution, Yresolution, SystemClockFreq, hsync, vsync, xposition, yposition, reset, clock);
-CRTcontrollerVer5 VideoTimer(NumberofPixels, NumberofLines, SystemClockFreq, 
-									  hsync, vsync, xpos, ypos, RESET, generated_clock);
 
 CRTcontroller VideoTimer(
 	.Xresolution(NumberofPixels), 

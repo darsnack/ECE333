@@ -27,8 +27,8 @@ UniversalCounter10bitsV5 YPositionCounter(
 	.BeginCount(10'd0), 
 	.EndCount(EndCount), 
 	.Q(ycount), 
-	.S1(NextLineOneShot), 
-	.S0(NextLineOneShot || PixelClockOneShot),
+	.S1(ycount == EndCount), 
+	.S0(NextLineOneShot && PixelClockOneShot),
 	.TerminalCount(),
 	.RESET(RESET), 
 	.CLK(CLK)

@@ -30,7 +30,8 @@ wire PixelClock;
 CRTClockGenerator CRTclockUnit(SystemClock, PixelClock, reset, clock);
 wire LineEnd;
 //module hsyncModuleVer5(vsync, PixelClock, SynchPulse, BackPorch, ActiveVideo, FrontPorch, hsync, LineEnd, xposition, reset, clock);
-hsyncModuleVer5 hsyncModule(1'b1, PixelClock, hSynchPulse, hBackPorch,  Xresolution, hFrontPorch, hsync, LineEnd, xposition, reset, clock);
+HSyncModule hsyncModule(1'b1, PixelClock, hSynchPulse, hBackPorch,  Xresolution, hFrontPorch, hsync, LineEnd, xposition, reset, clock);
 //module vsyncModuleVer4(hsynchpulse, SynchPulse, FrontPorch, ActiveVideo, BackPorch, vsync, yposition, reset, clock);
-vsyncModuleTemplate vsyncModule(LineEnd, vSynchPulse, vFrontPorch, Yresolution, vBackPorch, vsync, yposition, reset, clock);
+VSyncModule vsyncModule(.RESET(reset), .CLK(PixelClock), .LineEnd(LineEnd), .SynchPulse(vSynchPulse), .FrontPorch(vFrontPorch), 
+ 						.ActiveVideo(Yresolution), .BackPorch(vBackPorch), .vsync(vsync), .yposition(yposition));
 endmodule

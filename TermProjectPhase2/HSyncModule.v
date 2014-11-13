@@ -16,7 +16,7 @@ parameter xresolution=10;
 input [(xresolution - 1):0] SynchPulse, FrontPorch, ActiveVideo, BackPorch;
 input vsync, PixelClock, RESET, CLK;
 output hsync, LineEnd;
-output reg [(xresolution - 1):0] xposition;
+output [(xresolution - 1):0] xposition;
 wire [(xresolution - 1):0] xcount;
 
 wire [xresolution-1:0] EndCount = SynchPulse + FrontPorch + ActiveVideo + BackPorch;

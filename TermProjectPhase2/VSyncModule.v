@@ -22,7 +22,7 @@ ClockedOneShot PixelClockUnit(PixelClock, PixelClockOneShot, RESET, CLK);
 assign vsync = ~(ycount >= (ActiveVideo + FrontPorch) && ycount <= (ActiveVideo + FrontPorch + SynchPulse));
 assign yposition = ycount;
 
-UniversalCounter10bitsV5 XPositionCounter(
+UniversalCounter10bitsV5 YPositionCounter(
 	.P(10'd0), 
 	.BeginCount(10'd0), 
 	.EndCount(EndCount), 

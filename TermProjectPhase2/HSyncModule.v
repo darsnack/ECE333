@@ -29,6 +29,7 @@ ClockedOneShot PixelClockUnit(PixelClock, PixelClockOneShot, RESET, CLK);
 assign hsync = ~(xcount >= (ActiveVideo + FrontPorch) && xcount <= (ActiveVideo + FrontPorch + SynchPulse));
 assign LineEnd = (xcount == EndCount);	//reset counter
 assign xposition = xcount;
+
 UniversalCounter10bitsV5 XPositionCounter(
 	.P(10'd0), 
 	.BeginCount(10'd0), 

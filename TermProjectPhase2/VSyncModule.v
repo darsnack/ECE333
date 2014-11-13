@@ -19,11 +19,8 @@ wire [(yresolution - 1):0] EndCount = SynchPulse + FrontPorch + ActiveVideo + Ba
 ClockedOneShot RestartUnit(LineEnd, NextLineOneShot, RESET, CLK);
 ClockedOneShot PixelClockUnit(PixelClock, PixelClockOneShot, RESET, CLK);
 
-assign vsync = ~(ycount >= (ActiveVideo + FrontPorch) && (ActiveVideo + FrontPorch + SynchPulse));
-
-always @(ycount, SynchPulse, BackPorch, ActiveVideo, FrontPorch) begin
-	yposition <= ycount;
-end
+assign vsync = ~(ycount >= (ActiveVideo + FrontPorch) && y <= (ActiveVideo + FrontPorch + SynchPulse));
+assign yposition = ycount;
 
 UniversalCounter10bitsV5 XPositionCounter(
 	.P(10'd0), 

@@ -26,7 +26,7 @@ ClockedOneShot PixelClockUnit(PixelClock, PixelClockOneShot, RESET, CLK);
 
 //synch pulse appears at the end of the line and after front porch to mimic the pong video_timer
 //hsync <= ~(xpos > 664 && xpos <= 760);  // active for 95 clocks
-assign hsync = ~(xcount >= (ActiveVideo+FrontPorch) && xcount<= (ActiveVideo + FrontPorch + SynchPulse));
+assign hsync = ~(xcount >= (ActiveVideo + FrontPorch) && xcount <= (ActiveVideo + FrontPorch + SynchPulse));
 assign LineEnd = (xcount == EndCount);	//reset counter
 assign xposition = xcount;
 UniversalCounter10bitsV5 XPositionCounter(

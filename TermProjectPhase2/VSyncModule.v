@@ -12,14 +12,14 @@ parameter yresolution = 10;
 input [(yresolution - 1):0] SynchPulse, FrontPorch, ActiveVideo, BackPorch;
 input RESET, CLK, LineEnd;
 output vsync;
-output reg [(yresolution - 1):0] yposition;
+output [(yresolution - 1):0] yposition;
 wire [(yresolution - 1):0] ycount;
 wire [(yresolution - 1):0] EndCount = SynchPulse + FrontPorch + ActiveVideo + BackPorch;
 
 ClockedOneShot RestartUnit(LineEnd, NextLineOneShot, RESET, CLK);
 ClockedOneShot PixelClockUnit(PixelClock, PixelClockOneShot, RESET, CLK);
 
-assign vsync = ~(ycount >= (ActiveVideo + FrontPorch) && y <= (ActiveVideo + FrontPorch + SynchPulse));
+assign vsync = ~(ycount >= (ActiveVideo + FrontPorch) && ycount <= (ActiveVideo + FrontPorch + SynchPulse));
 assign yposition = ycount;
 
 UniversalCounter10bitsV5 XPositionCounter(

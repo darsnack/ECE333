@@ -9,8 +9,17 @@ module VSyncModuleTB;
 	wire vsync;
 	wire [9:0] yposition;
 
-	VSyncModule uut (LineEnd, SynchPulse, FrontPorch, ActiveVideo, 
-	BackPorch, vsync, yposition, RESET, CLK);
+	VSyncModule uut (
+		.LineEnd(LineEnd), 
+		.SynchPulse(SynchPulse), 
+		.FrontPorch(FrontPorch), 
+		.ActiveVideo(ActiveVideo), 
+		.BackPorch(BackPorch), 
+		.vsync(vsync), 
+		.yposition(yposition), 
+		.RESET(RESET), 
+		.CLK(CLK)
+	);
 	
 	initial begin
 		SynchPulse = 2;

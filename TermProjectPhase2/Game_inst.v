@@ -70,9 +70,9 @@ end
 // pixel color	
 reg [5:0] missTimer;	
 wire visible = (xpos < 640 && ypos < 480);
-wire top = (visible && ypos <= 3);
+wire top = (visible && ypos <= 4);
 wire bottom = (visible && ypos >= 476);
-wire left = (visible && xpos <= 3);
+wire left = (visible && xpos <= 4);
 wire right = (visible && xpos >= 636);
 wire border = (visible && (left || right || top));
 wire paddle = (xpos >= paddlePosition+4 && xpos <= paddlePosition+124 && ypos >= 440 && ypos <= 447);

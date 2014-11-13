@@ -11,11 +11,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module CRTClockGenerator(CLK, RESET, SystemClock, CRTclock);
+module CRTClockGenerator(CLK, RESET, SystemClockFreq, CRTclock);
 // Number of bits for SystemClock frequency in MHz
 // Max = 1023 MHz
 parameter SystemClockSize=10;
-input [SystemClockSize-1:0] SystemClock;
+input [SystemClockSize-1:0] SystemClockFreq;
 input RESET, CLK;
 
 output reg	CRTclock;
@@ -35,7 +35,7 @@ always @(posedge CLK) begin
 	// ((SystemClock / PixelClock) / 2) - 1
 	// Toggle clock on every half period, -1 inorder to accomadate
 	// for starting at zero
-	else if (count >= ((SystemClock / PixelClock) / 2) - 1) begin
+	else if (count >= ((SystemClockFreq / PixelClock) / 2) - 1) begin
 		count <= INIT_COUNT;
 		CRTclock <= ~CRTclock;
 	end

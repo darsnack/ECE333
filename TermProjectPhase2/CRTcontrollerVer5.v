@@ -13,11 +13,11 @@
 // hsync <= ~(xpos > 664 && xpos <= 760);  // active for 95 clocks
 // vsync <= ~(ypos == 490 || ypos == 491);   // active for lines 490 and 491
 
-module CRTcontrollerVer5(Xresolution, Yresolution, SystemClock, hsync, vsync, xposition, yposition, reset, clock);
+module CRTcontroller(Xresolution, Yresolution, SystemClockFreq, hsync, vsync, xposition, yposition, RESET, CLK);
 parameter ResolutionSize=10, SystemClockSize=10;
 input [ResolutionSize-1:0] Xresolution, Yresolution;
-input [SystemClockSize-1:0] SystemClock;
-input reset, clock;
+input [SystemClockSize-1:0] SystemClockFreq;
+input RESET, CLK;
 output hsync, vsync;
 output [ResolutionSize-1:0] xposition, yposition;
 //hsync is generated after active video and front porch from >664 to >=760 
@@ -25,13 +25,34 @@ parameter hSynchPulse=10'd95, hFrontPorch=10'd25, hBackPorch=10'd40; //hsynch=80
 //vsync is generated after active video and front porch from =>490 to >=491 
 parameter vSynchPulse=10'd2, vFrontPorch=10'd10, vBackPorch=10'd29; //vsynch=520
 
-wire PixelClock;
-//module CRTClockGenerator(SystemClock, CRTclock, Reset, Clock);
-CRTClockGenerator CRTclockUnit(SystemClock, PixelClock, reset, clock);
-wire LineEnd;
-//module hsyncModuleVer5(vsync, PixelClock, SynchPulse, BackPorch, ActiveVideo, FrontPorch, hsync, LineEnd, xposition, reset, clock);
-HSyncModule hsyncModule(1'b1, PixelClock, hSynchPulse, hBackPorch,  Xresolution, hFrontPorch, hsync, LineEnd, xposition, reset, clock);
-//module vsyncModuleVer4(hsynchpulse, SynchPulse, FrontPorch, ActiveVideo, BackPorch, vsync, yposition, reset, clock);
-VSyncModule vsyncModule(.RESET(reset), .CLK(PixelClock), .LineEnd(LineEnd), .SynchPulse(vSynchPulse), .FrontPorch(vFrontPorch), 
- 						.ActiveVideo(Yresolution), .BackPorch(vBackPorch), .vsync(vsync), .yposition(yposition));
+wire PixelClock, LineEnd;
+
+CRTClockGenerator CRTclockUnit(.SystemClockFreq(SystemClockFreq), .CRTclock(PixelClock), .RESET(RESET), .CLK(CLK));
+
+HSyncModule hsyncModule(
+	.vsync(vsync), 
+	.PixelClock(PixelClock), 
+	.SynchPulse(hSynchPulse), 
+	.BackPorch(hBackPorch), 
+	.ActiveVideo(Xresolution), 
+	.FrontPorch(hFrontPorch), 
+	.hsync(hsync), 
+	.LineEnd(LineEnd), 
+	.xposition(xposition), 
+	.RESET(RESET), 
+	.CLK(CLK)
+);
+
+VSyncModule vsyncModule(
+	.RESET(RESET), 
+	.CLK(PixelClock), 
+	.LineEnd(LineEnd), 
+	.SynchPulse(vSynchPulse), 
+	.FrontPorch(vFrontPorch),
+ 	.ActiveVideo(Yresolution), 
+ 	.BackPorch(vBackPorch), 
+ 	.vsync(vsync), 
+ 	.yposition(yposition)
+);
+
 endmodule

@@ -16,22 +16,22 @@ module CRTClockGeneratorTB;
 	// Inputs
 	reg CLK;
 	reg RESET;
-	reg [9:0] SystemClock;
+	reg [9:0] SystemClockFreq;
 
 	// Outputs
 	wire CRTclock;
 	wire [15:0] count = uut.count;
-	wire [15:0] crt_clock_threshold = ((uut.SystemClock / uut.PixelClock) / 2) - 1;
+	wire [15:0] crt_clock_threshold = ((uut.SystemClockFreq / uut.PixelClock) / 2) - 1;
 
 	// Instantiate the Unit Under Test (UUT)
 	CRTClockGenerator uut (
 		.CLK(CLK), 
 		.RESET(RESET), 
-		.SystemClock(SystemClock), 
+		.SystemClockFreq(SystemClockFreq), 
 		.CRTclock(CRTclock)
 	);
 
-	initial begin SystemClock = 100; RESET = 0; CLK = 0; end
+	initial begin SystemClockFreq = 100; RESET = 0; CLK = 0; end
  
 	initial fork
 		#0 RESET=1; #20 RESET=0;

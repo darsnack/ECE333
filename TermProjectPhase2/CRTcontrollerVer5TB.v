@@ -11,7 +11,7 @@ module CRTcontrollerVer5TB;
 	wire PixelClock=uut.PixelClock;
 
 	// Instantiate the Unit Under Test (UUT)
-	CRTcontrollerVer5 uut (
+	CRTcontroller uut (
 	Xresolution, Yresolution, SystemClock, hsync, vsync, xposition, yposition, reset, clock
 	);
 

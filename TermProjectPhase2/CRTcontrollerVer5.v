@@ -45,7 +45,7 @@ HSyncModule hsyncModule(
 
 VSyncModule vsyncModule(
 	.RESET(RESET), 
-	.CLK(PixelClock), 
+	.CLK(CLK), 
 	.LineEnd(LineEnd), 
 	.SynchPulse(vSynchPulse), 
 	.FrontPorch(vFrontPorch),

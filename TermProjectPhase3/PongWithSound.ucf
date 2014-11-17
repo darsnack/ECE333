@@ -12,6 +12,7 @@ NET "rota" LOC = P11;
 NET "rota" PULLUP;
 NET "rotb" LOC = N10;
 NET "rotb" PULLUP;
+NET "ServeBallButton" LOC = B8;
 NET "hsync" LOC = N6;
 NET "vsync" LOC = P7;
 NET "SpeakerOut" LOC = E11;

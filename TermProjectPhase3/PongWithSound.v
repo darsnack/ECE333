@@ -12,7 +12,7 @@
 //try to match the video_timer
 
 module PongWithSound(
-    input CLK, RESET, rota, rotb,
+    input CLK, RESET, rota, rotb, ServeBallButton,
 	 input  [3:0] PaddleSize,
     output [2:0] red,
     output [2:0] green,
@@ -41,6 +41,6 @@ CRTcontroller VideoTimer(
 	.CLK(CLK)
 );
 
-GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, PaddleSize, red, green, blue, SpeakerOut);
+GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, ServeBallButton, PaddleSize, red, green, blue, SpeakerOut);
 					
 endmodule

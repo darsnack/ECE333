@@ -24,7 +24,7 @@ module GameWithSoundButton(input clk25, input Reset,
 				output SpeakerOut);
 		
 // paddle movement		
-reg [8:0] paddlePosition;
+reg [10:0] paddlePosition;
 reg [2:0] quadAr, quadBr;
 always @(posedge clk25) quadAr <= {quadAr[1:0], rota};
 always @(posedge clk25) quadBr <= {quadBr[1:0], rotb};
@@ -33,7 +33,7 @@ always @(posedge clk25)
 if(quadAr[2] ^ quadAr[1] ^ quadBr[2] ^ quadBr[1])
 begin
 	if(quadAr[2] ^ quadBr[1]) begin
-		if(paddlePosition < 508)        // make sure the value doesn't overflow
+		if(paddlePosition + (PaddleSize*10+25) < 632) // make sure the value doesn't overflow
 			paddlePosition <= paddlePosition + 3'd4;
 	end
 	else begin

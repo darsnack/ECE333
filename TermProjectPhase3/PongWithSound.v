@@ -13,6 +13,7 @@
 
 module PongWithSound(
     input CLK, RESET, rota, rotb,
+	 input  [3:0] PaddleSize,
     output [2:0] red,
     output [2:0] green,
     output [1:0] blue,
@@ -40,6 +41,6 @@ CRTcontroller VideoTimer(
 	.CLK(CLK)
 );
 
-GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, red, green, blue, SpeakerOut);
+GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, PaddleSize, red, green, blue, SpeakerOut);
 					
 endmodule

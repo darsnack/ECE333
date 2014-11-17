@@ -16,6 +16,7 @@ module GameWithSoundButton(input clk25, input Reset,
 				input [9:0] ypos,
 				input rota,
 				input rotb,
+				input [3:0] PaddleSize,
 				output [2:0] red,
 				output [2:0] green,
 				output [1:0] blue,
@@ -78,7 +79,7 @@ wire bottom = (visible && ypos >= 476);
 wire left = (visible && xpos <= 4);
 wire right = (visible && xpos >= 636);
 wire border = (visible && (left || right || top));
-wire paddle = (xpos >= paddlePosition+4 && xpos <= paddlePosition+124 && ypos >= 440 && ypos <= 447);
+wire paddle = (xpos >= paddlePosition+4 && xpos <= paddlePosition+(PaddleSize*10+25) && ypos >= 440 && ypos <= 447);
 wire ball = (xpos >= ballX && xpos <= ballX+7 && ypos >= ballY && ypos <= ballY+7);
 wire background = (visible && !(border || paddle || ball));
 wire checkerboard = (xpos[5] ^ ypos[5]);

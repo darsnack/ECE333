@@ -15,3 +15,7 @@ NET "rotb" PULLUP;
 NET "hsync" LOC = N6;
 NET "vsync" LOC = P7;
 NET "SpeakerOut" LOC = E11;
+NET "PaddleSize[0]" LOC = T10;
+NET "PaddleSize[1]" LOC = T9;
+NET "PaddleSize[2]" LOC = V9;
+NET "PaddleSize[3]" LOC = M8;

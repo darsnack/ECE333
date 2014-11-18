@@ -14,7 +14,8 @@
 // vsync <= ~(ypos == 490 || ypos == 491);   // active for lines 490 and 491
 
 module CRTcontroller(Xresolution, Yresolution, SystemClockFreq, hsync, vsync, xposition, yposition, RESET, CLK);
-parameter ResolutionSize=10, SystemClockSize=10;
+parameter ResolutionSize = 10, SystemClockSize = 10;
+parameter PixelClockFreq = 10'd25;
 input [ResolutionSize-1:0] Xresolution, Yresolution;
 input [SystemClockSize-1:0] SystemClockFreq;
 input RESET, CLK;
@@ -27,7 +28,7 @@ parameter vSynchPulse=10'd2, vFrontPorch=10'd10, vBackPorch=10'd29; //vsynch=520
 
 wire PixelClock, LineEnd;
 
-CRTClockGenerator CRTclockUnit(.SystemClockFreq(SystemClockFreq), .CRTclock(PixelClock), .RESET(RESET), .CLK(CLK));
+ClockGenerator CRTClockUnit(.SystemCLKFreq(SystemClockFreq), .OutputCLKFreq(PixelClockFreq), .OutputCLK(PixelClock), .RESET(RESET), .CLK(CLK));
 
 HSyncModule hsyncModule(
 	.vsync(vsync), 

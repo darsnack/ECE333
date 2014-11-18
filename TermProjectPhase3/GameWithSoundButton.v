@@ -11,25 +11,29 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module GameWithSoundButton(input clk25, input Reset,
+module GameWithSoundButton(input CLK, input RESET,
 				input [9:0] xpos,
 				input [9:0] ypos,
 				input rota,
 				input rotb,
 				input ServeBallButton,
 				input [3:0] PaddleSize,
+				input CLK50MHz,
 				output [2:0] red,
 				output [2:0] green,
 				output [1:0] blue,
 				output SpeakerOut);
+
+wire ServeBallButtonDebounced;			
+Debouncer ServeDebouncer(.InputPulse(ServeBallButton), .DebouncedOuput(ServeBallButtonDebounced), .Reset(RESET), .CLOCK(CLK));
 		
 // paddle movement		
 reg [10:0] paddlePosition;
 reg [2:0] quadAr, quadBr;
-always @(posedge clk25) quadAr <= {quadAr[1:0], rota};
-always @(posedge clk25) quadBr <= {quadBr[1:0], rotb};
+always @(posedge CLK) quadAr <= {quadAr[1:0], rota};
+always @(posedge CLK) quadBr <= {quadBr[1:0], rotb};
 
-always @(posedge clk25)
+always @(posedge CLK)
 if(quadAr[2] ^ quadAr[1] ^ quadBr[2] ^ quadBr[1])
 begin
 	if(quadAr[2] ^ quadBr[1]) begin
@@ -54,18 +58,10 @@ wire MissedSoundOut;
 
 // Logic to handle serving the ball on push button press
 reg ServeBall;
-always @(ServeBallButton, missTimer) begin
-	if (ServeBallButton)
-		ServeBall <= 1;
-	else
-		ServeBall <= ServeBall;
-	if (missTimer != 0)
-		ServeBall <= 0;
-end	
 	
-always @(posedge clk25) begin
+always @(posedge CLK) begin
 	if (endOfFrame) begin // update ball position at end of each frame
-		if (ballX == 0 && ballY == 0) begin // cheesy reset handling, assumes initial value of 0
+		if (ballX == 0 && ballY == 0) begin // cheesy RESET handling, assumes initial value of 0
 			ballX <= 480;
 			ballY <= 300;
 		end
@@ -85,12 +81,16 @@ always @(posedge clk25) begin
 				else
 					ballY <= ballY - 2'd2;
 			end
+			else begin
+				ballX <= ballX;
+				ballY <= ballY;
+			end
 		end
 	end	
 end		
 		
 // pixel color	
-reg [5:0] missTimer = 05'b11111;	
+reg [4:0] missTimer = 5'b11111;	
 wire visible = (xpos < 640 && ypos < 480);
 wire top = (visible && ypos <= 4);
 wire bottom = (visible && ypos >= 476);
@@ -108,17 +108,22 @@ assign green = { !missed && (border || paddle || ball), 2'b00 };
 assign blue  = { !missed && (border || ball), background && checkerboard}; 
 		
 // ball collision	
-always @(posedge clk25) begin
+always @(posedge CLK) begin
 	if (!endOfFrame) begin
 		if (ball && (left || right))
 			bounceX <= 1;
 		if (ball && (top || bottom || (paddle && ballYdir)))
 			bounceY <= 1;
-		if (ball && bottom)
+		if (ball && bottom) begin
+			ServeBall <= 0;
 			missTimer <= 63;
+		end else if (ServeBallButtonDebounced) begin
+			ServeBall <= 1;
+			missTimer <= missTimer;
+		end
 	end
 	else begin
-		if (ballX == 0 && ballY == 0) begin // cheesy reset handling, assumes initial value of 0
+		if (ballX == 0 && ballY == 0) begin // cheesy RESET handling, assumes initial value of 0
 			ballXdir <= 1;
 			ballYdir <= 1;
 			bounceX <= 0;
@@ -133,11 +138,13 @@ always @(posedge clk25) begin
 			bounceY <= 0;
 			if (missTimer != 0)
 				missTimer <= missTimer - 1'b1;
+			else
+				missTimer <= 5'b00000;
 		end
 	end
 end
 
-PlaySound MissedSoundUnit(.PlayAgain(1), .Speaker(SpeakerOut), .ScoreSelect(2'b00), .RESET(RESET), .CLK(clk25));
+PlaySound MissedSoundUnit(.PlayAgain(missed), .Speaker(SpeakerOut), .ScoreSelect(2'b00), .RESET(RESET), .CLK(CLK50MHz));
 
 // assign SpeakerOut = MissedSoundOut;
 		

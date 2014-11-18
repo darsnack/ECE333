@@ -4,24 +4,22 @@
 // Engineer:		 Kyle Daruwalla & David McNeil
 //
 // Create Date:    11/10/2014
-// Module Name:    CRTClockGenerator
+// Module Name:    ClockGenerator
 // Description:
 //
-// Generate the internal game clock at 25MHz from a system clock
+// Generate the internal game clock at any frequency from a system clock
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module CRTClockGenerator(CLK, RESET, SystemClockFreq, CRTclock);
+module ClockGenerator(CLK, RESET, SystemCLKFreq, OutputCLKFreq, OutputCLK);
 // Number of bits for SystemClock frequency in MHz
 // Max = 1023 MHz
-parameter SystemClockSize=10;
-input [SystemClockSize-1:0] SystemClockFreq;
+parameter SystemClockSize = 10;
+input [(SystemClockSize - 1):0] SystemCLKFreq, OutputCLKFreq;
 input RESET, CLK;
 
-output reg	CRTclock;
+output reg OutputCLK;
 
-// The desired frequency for the internal game clock in MHz
-parameter PixelClock=25;
 // Internal variables for maintaining state
 parameter INIT_COUNT = 16'd0;
 reg [15:0] count;
@@ -29,19 +27,19 @@ reg [15:0] count;
 always @(posedge CLK) begin
 	if(RESET) begin
 		count <= INIT_COUNT;
-		CRTclock <= 1'b0;
+		OutputCLK <= 1'b0;
 	end
-	// Formula for converting SystemClock to CRTclock:
+	// Formula for converting SystemClock to OutputCLK:
 	// ((SystemClock / PixelClock) / 2) - 1
 	// Toggle clock on every half period, -1 inorder to accomadate
 	// for starting at zero
-	else if (count >= ((SystemClockFreq / PixelClock) / 2) - 1) begin
+	else if (count >= ((SystemCLKFreq / OutputCLKFreq) / 2) - 1) begin
 		count <= INIT_COUNT;
-		CRTclock <= ~CRTclock;
+		OutputCLK <= ~OutputCLK;
 	end
 	else begin
 		count <= count + 1'b1;
-		CRTclock <= CRTclock;
+		OutputCLK <= OutputCLK;
 	end
 end
 

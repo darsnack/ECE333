@@ -10,8 +10,6 @@ input PlayAgain, RESET, CLK;
 input [1:0] ScoreSelect;
 output Speaker;
 
-wire GeneratedCLK;
-
 parameter AddressBits=5;
 parameter DataLength=4;
 wire [2:0] NoteArray;	//three notes
@@ -19,20 +17,19 @@ wire [DataLength-1:0] KeyOutput, TimeOutput;
 wire [AddressBits-1:0] ReadingAddress;
 wire EndofScore, DebouncedPlayAgain, OneShotPlayAgain;
 
-Debouncer PlayDebounce(PlayAgain, DebouncedPlayAgain, RESET, GeneratedCLK);
-ClockedOneShot PlayOneShot(DebouncedPlayAgain, OneShotPlayAgain, RESET, GeneratedCLK);
+Debouncer PlayDebounce(PlayAgain, DebouncedPlayAgain, RESET, CLK);
+ClockedOneShot PlayOneShot(DebouncedPlayAgain, OneShotPlayAgain, RESET, CLK);
 
-//module MusicSheetReader(Start, EndofScore, StartAddress, KeyOutput, TimeOutput, CurrentAddress, EndofNote, GeneratedCLK, RESET);
-MusicSheetReader Reader(OneShotPlayAgain, EndofScore, 5'd0 , KeyOutput, ReadingAddress, Over, GeneratedCLK, RESET);
+//module MusicSheetReader(Start, EndofScore, StartAddress, KeyOutput, TimeOutput, CurrentAddress, EndofNote, CLK, RESET);
+MusicSheetReader Reader(OneShotPlayAgain, EndofScore, 5'd0 , KeyOutput, ReadingAddress, Over, CLK, RESET);
 
-//module MusicScore(ReadOrWrite, Address, KeyInput, KeyOutput, TimeInput, TimeOutput,GeneratedCLK, RESET);
-// MusicScore Sheet(1'b1,ReadingAddress, 4'd0, KeyOutput, 4'd0, TimeOutput,GeneratedCLK, RESET);
-MusicScore Sheet(.ReadOrWrite(1'b1), .Address(ReadingAddress), .KeyInput(4'd0), .KeyOutput(KeyOutput), 
-				 .TimeInput(4'd0), .TimeOutput(TimeOutput), .ScoreSelect(ScoreSelect), .CLK(GeneratedCLK), .RESET(RESET));
-//module PlayNote(Note, Duration, Start, Over, NoteArray, RESET, GeneratedCLK);
-PlayNote2 PlayNoteUnit(KeyOutput, TimeOutput, ~EndofScore, Over, NoteArray, RESET, GeneratedCLK);
+//module MusicScore(ReadOrWrite, Address, KeyInput, KeyOutput, TimeInput, TimeOutput,CLK, RESET);
+// MusicScore Sheet(1'b1,ReadingAddress, 4'd0, KeyOutput, 4'd0, TimeOutput,CLK, RESET);
+MusicScore Sheet(.ReadOrWrite(1'b1), .Address(ReadingAddress), .KeyInput(4'd0), .KeyOutput(KeyOutput),  .TimeInput(4'd0), .TimeOutput(TimeOutput), .ScoreSelect(ScoreSelect), .CLK(CLK), .RESET(RESET));
+//module PlayNote(Note, Duration, Start, Over, NoteArray, RESET, CLK);
+PlayNote2 PlayNoteUnit(KeyOutput, TimeOutput, ~EndofScore, Over, NoteArray, RESET, CLK);
 
-//module ThreeMusicNotes(keyC, keyD, keyE, Speaker, RESET, GeneratedCLK) ;
-ThreeMusicNotes NoteUnit(NoteArray[0], NoteArray[1], NoteArray[2], Speaker, RESET, GeneratedCLK) ;
+//module ThreeMusicNotes(keyC, keyD, keyE, Speaker, RESET, CLK) ;
+ThreeMusicNotes NoteUnit(NoteArray[0], NoteArray[1], NoteArray[2], Speaker, RESET, CLK) ;
 
 endmodule

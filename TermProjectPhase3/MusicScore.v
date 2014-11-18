@@ -31,16 +31,16 @@ always@(posedge CLK or posedge RESET)
 		KeysMissed[11]<=0; TimesMissed[11]<=0;
 	end 
 	else if (ReadOrWrite == 1) begin	//read memory
-		case(ScoreSelect) 
-		MissedScore: begin 
+		//case(ScoreSelect) 
+		//MissedScore: begin 
 			KeyOutput <= KeysMissed[Address];
 			TimeOutput <= TimesMissed[Address];
-		end
-		default: begin
-			KeyOutput <= KeysMissed[Address];
-			TimeOutput <= TimesMissed[Address];
-		end
-		endcase
+		//end
+		//default: begin
+			//KeyOutput <= KeysMissed[Address];
+			//TimeOutput <= TimesMissed[Address];
+		//end
+		//endcase
 	end
 	else begin
 		KeysMissed[Address] <= KeyInput; TimesMissed[Address] <= TimeInput;

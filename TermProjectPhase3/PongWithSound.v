@@ -23,11 +23,11 @@ module PongWithSound(
 
 wire [9:0] xpos;
 wire [9:0] ypos;
-wire GeneratedCLK;
+wire SpeakerCLK;
 
-parameter [9:0] NumberofPixels=10'd640, NumberofLines=10'd480, SystemClockFreq=10'd100; //MHz 
+parameter [9:0] NumberofPixels=10'd640, NumberofLines=10'd480, SystemClockFreq=10'd100, SpeakerClockFreq = 10'd50; //MHz 
 
-//Clock50MHz ClockUnit(.CLK_IN1(CLK), .CLK_OUT1(GeneratedCLK), .LOCKED());
+ClockGenerator Clock50MHz(.CLK(CLK), .RESET(RESET), .SystemCLKFreq(SystemClockFreq), .OutputCLKFreq(SpeakerClockFreq), .OutputCLK(SpeakerCLK));
 
 CRTcontroller VideoTimer(
 	.Xresolution(NumberofPixels), 
@@ -41,6 +41,6 @@ CRTcontroller VideoTimer(
 	.CLK(CLK)
 );
 
-GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, ServeBallButton, PaddleSize, red, green, blue, SpeakerOut);
+GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, ServeBallButton, PaddleSize, SpeakerCLK, red, green, blue, SpeakerOut);
 					
 endmodule

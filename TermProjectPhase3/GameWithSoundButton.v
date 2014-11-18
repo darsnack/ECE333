@@ -54,7 +54,7 @@ reg bounceX, bounceY;
 	
 wire endOfFrame = (xpos == 0 && ypos == 480);
 
-wire MissedSoundOut;
+wire MissedSoundOut, PaddleSoundOut, BallCollisionSoundOut;
 
 // Logic to handle serving the ball on push button press
 reg ServeBall;
@@ -107,7 +107,7 @@ assign red   = { missed || border || paddle, 2'b00 };
 assign green = { !missed && (border || paddle || ball), 2'b00 };
 assign blue  = { !missed && (border || ball), background && checkerboard}; 
 		
-// ball collision	
+// ball collision
 always @(posedge CLK) begin
 	if (!endOfFrame) begin
 		if (ball && (left || right))
@@ -144,8 +144,12 @@ always @(posedge CLK) begin
 	end
 end
 
-PlaySound MissedSoundUnit(.PlayAgain(missed), .Speaker(SpeakerOut), .ScoreSelect(2'b00), .RESET(RESET), .CLK(CLK50MHz));
+wire collision = ((ballY <= 438) && ((ballX > paddlePosition + 4) || (ballX < (paddlePosition + (PaddleSize*10 +25)))));
 
-// assign SpeakerOut = MissedSoundOut;
+PlaySound MissedSoundUnit(.PlayAgain(missed), .Speaker(MissedSoundOut), .ScoreSelect(2'b00), .RESET(RESET), .CLK(CLK50MHz));
+PlaySound PaddleSoundUnit(.PlayAgain(paddlePosition < 2'd3 || paddlePosition + (PaddleSize*10+25) > 632), .Speaker(PaddleSoundOut), .ScoreSelect(2'b01), .RESET(RESET), .CLK(CLK50MHz));
+PlaySound BallCollisionSoundUnit(.PlayAgain(ball && paddle), .Speaker(BallCollisionSoundOut), .ScoreSelect(2'b10), .RESET(RESET), .CLK(CLK50MHz));
+
+assign SpeakerOut = MissedSoundOut || PaddleSoundOut || BallCollisionSoundOut;
 		
 endmodule

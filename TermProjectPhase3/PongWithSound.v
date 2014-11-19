@@ -18,7 +18,8 @@ module PongWithSound(
     output [2:0] green,
     output [1:0] blue,
     output hsync, vsync,
-    output SpeakerOut
+    output SpeakerOut,
+	 output BackgroundOut
 );
 
 wire [9:0] xpos;
@@ -41,6 +42,6 @@ CRTcontroller VideoTimer(
 	.CLK(CLK)
 );
 
-GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, ServeBallButton, PaddleSize, SpeakerCLK, red, green, blue, SpeakerOut);
+GameWithSoundButton game(CLK, RESET, xpos, ypos, rota, rotb, ServeBallButton, PaddleSize, SpeakerCLK, red, green, blue, SpeakerOut, BackgroundOut);
 					
 endmodule

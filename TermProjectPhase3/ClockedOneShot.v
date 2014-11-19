@@ -11,7 +11,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 
-module ClockedOneShot(InputPulse, OneShot, Reset, CLOCK) ;
+module ClockedOneShot(InputPulse, OneShot, Reset, CLOCK);
 
 input		InputPulse, Reset, CLOCK;
 output reg OneShot;

@@ -17,11 +17,11 @@ wire [DataLength-1:0] KeyOutput, TimeOutput;
 wire [AddressBits-1:0] ReadingAddress;
 wire EndofScore, DebouncedPlayAgain, OneShotPlayAgain;
 
-Debouncer PlayDebounce(PlayAgain, DebouncedPlayAgain, RESET, CLK);
-ClockedOneShot PlayOneShot(DebouncedPlayAgain, OneShotPlayAgain, RESET, CLK);
+// Debouncer PlayDebounce(PlayAgain, DebouncedPlayAgain, RESET, CLK);
+//ClockedOneShot PlayOneShot(PlayAgain, OneShotPlayAgain, RESET, CLK);
 
 //module MusicSheetReader(Start, EndofScore, StartAddress, KeyOutput, TimeOutput, CurrentAddress, EndofNote, CLK, RESET);
-MusicSheetReader Reader(OneShotPlayAgain, EndofScore, 5'd0 , KeyOutput, ReadingAddress, Over, CLK, RESET);
+MusicSheetReader Reader(PlayAgain, EndofScore, 5'd0 , KeyOutput, ReadingAddress, Over, CLK, RESET);
 
 //module MusicScore(ReadOrWrite, Address, KeyInput, KeyOutput, TimeInput, TimeOutput,CLK, RESET);
 // MusicScore Sheet(1'b1,ReadingAddress, 4'd0, KeyOutput, 4'd0, TimeOutput,CLK, RESET);

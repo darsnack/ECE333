@@ -22,7 +22,8 @@ module GameWithSoundButton(input CLK, input RESET,
 				output [2:0] red,
 				output [2:0] green,
 				output [1:0] blue,
-				output SpeakerOut);
+				output SpeakerOut,
+				output BackgroundOut);
 
 wire ServeBallButtonDebounced;			
 Debouncer ServeDebouncer(.InputPulse(ServeBallButton), .DebouncedOuput(ServeBallButtonDebounced), .Reset(RESET), .CLOCK(CLK));
@@ -147,8 +148,11 @@ end
 wire collision = ((ballY <= 438) && ((ballX > paddlePosition + 4) || (ballX < (paddlePosition + (PaddleSize*10 +25)))));
 
 PlaySound MissedSoundUnit(.PlayAgain(missed), .Speaker(MissedSoundOut), .ScoreSelect(2'b00), .RESET(RESET), .CLK(CLK50MHz));
-PlaySound PaddleSoundUnit(.PlayAgain(paddlePosition < 2'd3 || paddlePosition + (PaddleSize*10+25) > 632), .Speaker(PaddleSoundOut), .ScoreSelect(2'b01), .RESET(RESET), .CLK(CLK50MHz));
+PlaySound PaddleSoundUnit(.PlayAgain(quadAr[1] ^ quadBr[1]), .Speaker(PaddleSoundOut), .ScoreSelect(2'b01), .RESET(RESET), .CLK(CLK50MHz));
 PlaySound BallCollisionSoundUnit(.PlayAgain(ball && paddle), .Speaker(BallCollisionSoundOut), .ScoreSelect(2'b10), .RESET(RESET), .CLK(CLK50MHz));
+PlaySound BackgroundSoundUnit(.PlayAgain(1), .Speaker(BackgroundOut), .ScoreSelect(2'b11), .RESET(RESET), .CLK(CLK50MHz));
+//ClockedOneShot(quadAr[1], quadArOneshot, RESET, CLK50MHz);
+//ClockedOneShot(quadBr[1], quadBrOneshot, RESET, CLK50MHz);
 
 assign SpeakerOut = MissedSoundOut || PaddleSoundOut || BallCollisionSoundOut;
 		

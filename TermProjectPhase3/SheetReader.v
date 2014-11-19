@@ -14,13 +14,13 @@ parameter AddressBits=5;
 input [AddressBits-1:0] StartAddress;
 output reg [AddressBits-1:0] CurrentAddress;
 input EndofNote;
-reg State;	//1 to read  or 0 to stop
+reg State;
 
 assign EndofScore = ~State;
 
 always@(posedge Clock or posedge Reset)
 	if (Reset==1) begin State<=0;end
-	else if(Start==1) begin State<=1;end //start
+	else if(Start==1 && KeyOutput!=0) begin State<=1;end //start
 	else if(KeyOutput==0) begin State<=0;end	//stop
 	else begin State<=State;end
 	
@@ -30,5 +30,33 @@ always@(posedge Clock or posedge Reset)
 	else if (EndofNote==1 && KeyOutput!=0) 
 		begin CurrentAddress<=CurrentAddress+1'b1; end
 	else begin CurrentAddress<=CurrentAddress;end
+
+/*reg CurrentState;
+reg NextState;
+parameter InitialState = 1'b0, PlayState = 1'b1;
+
+always@(CurrentState) begin
+	if(InitialState) CurrentAddress <= StartAddress;
+	else CurrentAddress <= CurrentAddress + 1'b1;
+end
+
+always@(CurrentState) begin
+	case(CurrentState)
+	InitialState: begin
+		if (Start) NextState <= PlayState;
+		else NextState <= InitialState;
+	end
+	PlayState: begin
+		if (EndofNote == 1 && KeyOutput == 0) NextState <= InitialState;
+		else NextState <= PlayState;
+	end
+	default: NextState <= InitialState;
+	endcase
+end
+	
+always@(posedge Clock or posedge Reset) begin
+	if(Reset == 1) CurrentState <= InitialState;
+	else CurrentState <= NextState;
+end*/
 
 endmodule
